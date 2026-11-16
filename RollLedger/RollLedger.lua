@@ -97,7 +97,12 @@ addon:SetScript("OnEvent", function(_, event, arg)
             RollLedgerDB = RollLedgerDB or {}
             db = RollLedgerDB
             db.cache = db.cache or {}
-            db.font, db.x, db.y = db.font or 12, db.x or 6, db.y or 0
+            if not db.displayDefaultsVersion then
+                if db.font == 12 then db.font = 14 end
+                if (db.x == nil or db.x == 6) and (db.y == nil or db.y == 0) then db.x = -10 end
+                db.displayDefaultsVersion = 1
+            end
+            db.font, db.x, db.y = db.font or 14, db.x or -10, db.y or 0
             for guid, c in pairs(db.cache) do
                 if type(c) ~= "table" or not number(c.need) or not number(c.runs) or c.runs <= 0 or type(c.at) ~= "number" or time() - c.at >= 86400 then db.cache[guid] = nil end
             end
@@ -140,7 +145,7 @@ SlashCmdList.ROLLLEDGER = function(message)
     a, b = tonumber(a), tonumber(b)
     if command == "font" and a and a >= 8 and a <= 32 then db.font = a
     elseif command == "offset" and a and b and math.abs(a) <= 100 and math.abs(b) <= 100 then db.x, db.y = a, b
-    elseif command == "reset" then db.font, db.x, db.y = 12, 6, 0
-    else print("RollLedger：/rollledger font 12（8–32）；offset 6 0（各−100至100）；reset") return end
+    elseif command == "reset" then db.font, db.x, db.y = 14, -10, 0
+    else print("RollLedger：/rollledger font 14（8–32）；offset -10 0（各−100至100）；reset") return end
     for _, p in pairs(plates) do style(p); draw(p) end
 end

@@ -1,0 +1,6 @@
+## Interface: 16001
+## Title: 骰子账本 | RollLedger
+## Notes: 在友方玩家姓名板显示每本平均需求次数
+## Version: 1.0.0
+## SavedVariables: RollLedgerDB
+RollLedger.lua

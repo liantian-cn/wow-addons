@@ -71,6 +71,20 @@ local function number(value)
     if n and n >= 0 and n < math.huge then return n end
 end
 local function attachAchievement()
+    local comparison = AchievementFrameComparison
+    if comparison and not addon.comparisonHooked then
+        local onEvent = comparison:GetScript("OnEvent")
+        if onEvent then
+            -- Forever keeps this event registered while the comparison UI is
+            -- hidden. Background queries can then pass "summary" to an API
+            -- requiring a numeric category. HookScript runs too late to help.
+            comparison:SetScript("OnEvent", function(self, event, ...)
+                if event == "INSPECT_ACHIEVEMENT_READY" and not self:IsVisible() then return end
+                return onEvent(self, event, ...)
+            end)
+            addon.comparisonHooked = true
+        end
+    end
     if AchievementFrame and not addon.achievementHooked then
         addon.achievementHooked = true
         AchievementFrame:HookScript("OnShow", function() finish(true); wake(0.05) end)

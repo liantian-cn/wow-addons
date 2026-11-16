@@ -91,6 +91,7 @@ addon:SetScript("OnEvent", function(_, event, arg)
         attachAchievement()
     elseif event == "NAME_PLATE_UNIT_ADDED" and db then
         if not valid(arg) then return end
+        if not C_NamePlate or not C_NamePlate.GetNamePlateForUnit then return end
         local frame = C_NamePlate.GetNamePlateForUnit(arg)
         if not frame then return end
         local text = frame.RollLedgerText or frame:CreateFontString(nil, "OVERLAY")

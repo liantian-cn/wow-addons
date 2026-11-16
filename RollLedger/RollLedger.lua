@@ -22,9 +22,14 @@ local function draw(p)
     if not c or time() - c.at >= 86400 or time() < c.at then return end
     local value = c.need / c.runs
     p.text:SetText(string.format("%.1f", value))
-    if value < 3 then p.text:SetTextColor(0, 1, 0)
-    elseif value <= 5 then p.text:SetTextColor(1, 1, 0)
-    else p.text:SetTextColor(1, 0, 0) end
+    -- Interpolate the unrounded value: #4ADE80 -> #FACC15 -> #F87171.
+    if value <= 3.5 then
+        local t = math.max(0, (value - 2) / 1.5)
+        p.text:SetTextColor((74 + 176 * t) / 255, (222 - 18 * t) / 255, (128 - 107 * t) / 255)
+    else
+        local t = math.min(1, (value - 3.5) / 1.5)
+        p.text:SetTextColor((250 - 2 * t) / 255, (204 - 91 * t) / 255, (21 + 92 * t) / 255)
+    end
     p.text:Show()
 end
 local function finish(failed)
